@@ -22,8 +22,6 @@ observeEvent(input$file1, {
 })
 
 
-
-
 observeEvent(input$file1_expression, {
   inFile <- input$file1_expression
   if (is.null(inFile))

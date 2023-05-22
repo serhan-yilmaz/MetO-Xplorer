@@ -8,8 +8,44 @@ fo_process_dataset <- function(ds, Tmeta, type = "phosphorylation"){
   # valid_rows = ST$Type == type
   Ts = Ts[valid_rows, ]
   ST = ST[valid_rows, ]
+  Tsraw <- ds$Ts_raw[valid_rows, ]
   
-  Ts[Ts == 0] = NA
+  # replace_with_min = T
+  # if(replace_with_min){
+  #   Ts == 0
+  # }
+  
+  
+  if(identical(input$options_imputation, "Minimum across proteins")){
+    Tsx = Ts
+    Tsx[Ts == 0] = NA
+    Mmins <- apply(Tsx, 2, function(x) min(x, na.rm=T))
+    ind = which(Ts == 0, arr.ind = T)
+    values = Mmins[ind[, 2]]
+    Ts[which(Ts == 0)] = values
+  }
+  
+  if(identical(input$options_imputation, "Replace with 0.5")){
+    Tsraw[Tsraw == 0] = 0.5
+    if(!identical(input$options_transformation, "Ratio of Spectral Counts")){
+      Ts2 = ds$Ts2[valid_rows, ]
+      Ts = Tsraw / Ts2
+      Ts[is.infinite(ds$Ts)] = NA
+      Ts[Ts < 0] = NA
+      # ds$Ts[ds$Ts <= 0] = NA
+      Ts[Ts > 1] = NA
+    } else {
+      Ts = Tsraw
+    }
+  }
+  
+  if(identical(input$options_imputation, "Do not apply")){
+    Ts[Ts == 0] = NA
+  }
+  
+  # browser()
+  
+  # Ts[Ts == 0] = NA
   
   odds_transformation = identical(input$options_transformation, "Odds Ratio")
   # odds_transformation = TRUE

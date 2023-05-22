@@ -109,7 +109,7 @@ plotly_volcano <- function(p, tooltip = c("ID", "xx", "yy", "zz")){
       });
       el.on('plotly_click', function(d) { 
         var index = d.points[0].pointIndex;
-		txt = d.points[0].data.key[index]
+		    txt = d.points[0].data.key[index]
         console.log('Click-Key: ', txt);
 		Shiny.setInputValue('site_kinase_network_doubleclick', txt, {priority: 'event'});
       });

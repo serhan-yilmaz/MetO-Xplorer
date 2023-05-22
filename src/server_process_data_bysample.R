@@ -5,11 +5,51 @@ fo_process_data_bysample <- function(ds, Tmeta, norm_by = c(), type = "phosphory
   # valid_rows = ST$Type == type
   Ts = Ts[valid_rows, ]
   ST = ST[valid_rows, ]
+  Tsraw <- ds$Ts_raw[valid_rows, ]
+  Ts_unimputed = Ts
+  Ts2 = ds$Ts2[valid_rows, ]
   validate(
     need(nnzero(valid_rows) > 0, paste0(tools::toTitleCase(type), " data is not available"))
   )
   
-  Ts[Ts == 0] = NA
+  if(identical(input$options_imputation, "Minimum across proteins")){
+    Tsx = Ts
+    Tsx[Ts == 0] = NA
+    Mmins <- apply(Tsx, 2, function(x) min(x, na.rm=T))
+    ind = which(Ts == 0, arr.ind = T)
+    values = Mmins[ind[, 2]]
+    Ts[which(Ts == 0)] = values
+  }
+  
+  if(identical(input$options_imputation, "Replace with 0.5")){
+    Tsraw[Tsraw == 0] = 0.5
+    if(!identical(input$options_transformation, "Ratio of Spectral Counts")){
+      Ts2 = ds$Ts2[valid_rows, ]
+      Ts = Tsraw / Ts2
+      Ts[is.infinite(ds$Ts)] = NA
+      Ts[Ts < 0] = NA
+      # ds$Ts[ds$Ts <= 0] = NA
+      Ts[Ts > 1] = NA
+    } else {
+      Ts = Tsraw
+    }
+  }
+  
+  if(identical(input$options_imputation, "Do not apply")){
+    Ts[Ts == 0] = NA
+  }
+  
+  # replace_with_min = T
+  # if(replace_with_min){
+  #   Ts == 0
+  # }
+  # Tsx = Ts
+  # Tsx[Ts == 0] = NA
+  # Mmins <- apply(Tsx, 2, function(x) min(x, na.rm=T))
+  # ind = which(Ts == 0, arr.ind = T)
+  # values = Mmins[ind[, 2]]
+  # Ts[which(Ts == 0)] = values
+  # # Ts[Ts == 0] = NA
   
   odds_transformation = identical(input$options_transformation, "Odds Ratio")
   # odds_transformation = TRUE
@@ -75,9 +115,11 @@ fo_process_data_bysample <- function(ds, Tmeta, norm_by = c(), type = "phosphory
   Sx = SE[validSites, ]
   ST = ST[validSites, ]
   Ts = Ts[validSites, ]
-  Ts <- log2(Ts)
-  
-  return (list("Xv" = Xv, "Sx" = Sx, "ST"= ST, "Ts" = Ts, "validSites" = validSites, "Tmeta" = Tmeta))
+  # Ts <- log2(Ts)
+  Ts <- Ts_unimputed[validSites, ]
+  Tsraw <- Tsraw[validSites, ]
+  Ts2 = Ts2[validSites, ]
+  return (list("Xv" = Xv, "Sx" = Sx, "ST"= ST, "Ts" = Ts, "Tsraw" = Tsraw, "Ts2" = Ts2, "validSites" = validSites, "Tmeta" = Tmeta))
 }
 
 processed_data_bysample <- reactive({
@@ -94,12 +136,13 @@ processed_data_bysample_unfiltered <- reactive({
   ds <- current_dataset_mapped()
   Tmeta <- current_metadata()
   
-  if(cache$cached_mbox_main_normgroup() == T){
-    norm_by = input$mbox_site_plot_select_group
-    if(is.null(norm_by)){norm_by = c()}
-  } else {
-    norm_by = c()
-  }
+  # if(cache$cached_mbox_main_normgroup() == T){
+  #   norm_by = input$mbox_site_plot_select_group
+  #   if(is.null(norm_by)){norm_by = c()}
+  # } else {
+  #   norm_by = c()
+  # }
+  norm_by = c()
   #norm_by = c("Gender", "Timepoint")
   
   fo_process_data_bysample(ds, Tmeta, norm_by)
@@ -119,12 +162,13 @@ processed_expression_data_bysample_unfiltered <- reactive({
   ds <- current_dataset_mapped()
   Tmeta <- current_metadata()
   
-  if(cache$cached_mbox_main_normgroup() == T){
-    norm_by = input$mbox_site_plot_select_group
-    if(is.null(norm_by)){norm_by = c()}
-  } else {
-    norm_by = c()
-  }
+  # if(cache$cached_mbox_main_normgroup() == T){
+  #   norm_by = input$mbox_site_plot_select_group
+  #   if(is.null(norm_by)){norm_by = c()}
+  # } else {
+  #   norm_by = c()
+  # }
+  norm_by = c()
   # is_expression_data_available
   #norm_by = c("Gender", "Timepoint")
   

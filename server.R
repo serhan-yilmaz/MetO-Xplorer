@@ -23,6 +23,9 @@ library(limma, include.only = 'squeezeVar')
 library(statmod)
 library(plotly)
 library(cicerone)
+library(hrbrthemes)
+library(viridis)
+library("ggthemes")
 
 options(shiny.sanitize.errors = FALSE)
 
@@ -105,6 +108,10 @@ function(input, output, session) {
   
   foFilterDataset <- function(ds, validSamples){
     ds$Ts <- ds$Ts[, validSamples]
+    ds$Ts_raw <- ds$Ts_raw[, validSamples]
+    if(!is.null(ds$Ts2)){
+      ds$Ts2 = ds$Ts2[, validSamples]
+    }
     return(ds)
   }
   
@@ -153,6 +160,9 @@ function(input, output, session) {
   source(file = "src/server_site_barplots.R", local=TRUE)
   # source(file = "src/server_site_heatmaps.R", local=TRUE)
   source(file = "src/server_protexpression_heatmaps.R", local=TRUE)
+  
+  source(file = "src/server_modalbox_main.R", local=TRUE)
+  source(file = "src/server_modalbox_barplots.R", local=TRUE)
   
   source(file = "src/server_table_outputs_enrichment.R", local=TRUE)
   source(file = "src/server_table_outputs_targets.R", local=TRUE)

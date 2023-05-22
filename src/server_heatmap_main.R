@@ -1,4 +1,4 @@
-heatmapMain <- function(ST, STx, ds, minzscore, topk, show_significant_only, intensity_fc_style, items_txt, groupings = c()){
+heatmapMain <- function(ST, STx, ds, minzscore, topk, show_significant_only, intensity_fc_style, items_txt, groupings = c(), fill_txt = NULL){
   show_intensity = intensity_fc_style == "Both case and control"
   
   #Z = ds$Xv/ds$Sx
@@ -20,8 +20,8 @@ heatmapMain <- function(ST, STx, ds, minzscore, topk, show_significant_only, int
   
   STv = STx[indices, ]
   
-  Ts = Ts - apply(Ts, 2, function(x) mean(x, na.rm=T))
-  Ts = Ts - apply(Ts, 1, function(x) mean(x, na.rm=T))
+  # Ts = Ts - apply(Ts, 2, function(x) mean(x, na.rm=T))
+  # Ts = Ts - apply(Ts, 1, function(x) mean(x, na.rm=T))
   
   #Ts <- as.data.frame(normalize.quantiles(as.matrix(Ts)))
   #Z[is.na(Z)] = 0
@@ -89,7 +89,7 @@ heatmapMain <- function(ST, STx, ds, minzscore, topk, show_significant_only, int
     
     #data_melt$Grouping = t(Tmeta$Tsample_metadata["Gender", indices])
     
-    fill_txt = "Log2-Intensity"
+    # fill_txt = "Log2-Intensity"
   } else {
     data_melt <- melt(Z)
     fill_txt = "Log2-FC"
@@ -133,11 +133,20 @@ heatmapMain <- function(ST, STx, ds, minzscore, topk, show_significant_only, int
     }
   }
   
+  na.value = "#000000"
+  # na.value = "#336633"
+  
   ggp = ggp + theme(strip.text.y = element_text(size = 16))
   ggp = ggp + theme(strip.background = element_rect(color = "#000000", fill = "#F9F9B7"))
   
-  ggp = ggp + scale_fill_gradient2(name = fill_txt, low = "blue", mid = "white", high = "red", na.value = "#336633")
+  if(!show_intensity){
+    ggp = ggp + scale_fill_gradient2(name = fill_txt, low = "blue", mid = "white", high = "red", na.value = na.value)
   #ggp = ggp + scale_fill_gradientn(colours = c("blue", "white", "red"))
+  } else {
+    # ggp = ggp + scale_fill_gradient2(name = fill_txt, low = "blue", mid = "white", high = "red", na.value = "#336633")
+    # ggp = ggp + scale_fill_gradient(na.value = "#336633", low = "#FFFFF0", high = "#00429d")
+    ggp = ggp + scale_fill_gradient(name = fill_txt, na.value =  na.value, low = "#fefef8", high = "red")
+  }
   
   #ggp = ggp + scale_fill_gradient(low = "white", high = "red", na.value = "#336633")
   ggp = ggp + theme(axis.text.x=element_text(angle =- 90, vjust = 0.5, hjust = 0, size=15))

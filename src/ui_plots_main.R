@@ -174,6 +174,7 @@ volcanoplot_ui <- function(identifier, minlogfc = 0.32, include_fc_slider = T,
     }
   }
   
+  # "Hover on a point to inspect it in detail."
   tags$div(
     id = paste0(identifier, "_", "wrapper_div"), 
     style = "padding: 0px;", 
@@ -182,7 +183,7 @@ volcanoplot_ui <- function(identifier, minlogfc = 0.32, include_fc_slider = T,
              tags$div(
                style = "margin-top: 10px", 
                shinycssloaders::withSpinner(plotlyOutput(identifier, height = "420px"), hide.ui = FALSE),
-               "Hover on a point to inspect it in detail."
+               "Click on a point to inspect it in detail."
                )
              ), 
       column(width = (12 - plot_width), id = paste0(identifier, "_", "analysisopts_div"), 

@@ -32,11 +32,21 @@ protExpressionHeatmap <- reactive({
   topk = input$protexpression_heatmap_maxitems
   show_significant_only = input$protexpression_heatmap_significant_only
   intensity_fc_style = input$protexpression_heatmap_intensity_fc_style
+  # intensity_fc_style = "Case samples"
   groupings = input$protexpression_heatmap_select_group
-  
+  fill_txt = NULL
+  if(identical(input$options_transformation, "Ratio of Spectral Counts")){
+    fill_txt = "Spectral Count"
+  }
+  if(identical(input$options_transformation, "Ratio of Percentages")){
+    fill_txt = "Percentage"
+  }
+  if(identical(input$options_transformation, "Odds Ratio")){
+    fill_txt = "Percentage"
+  }
   heatmapMain(ST, STx, ds, minzscore, topk, 
               show_significant_only, intensity_fc_style, "proteins",
-              groupings = groupings)
+              groupings = groupings, fill_txt = fill_txt)
 })
 
 output$protexpression_heatmap <- renderPlot({

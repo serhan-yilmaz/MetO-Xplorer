@@ -17,8 +17,9 @@ library(shinytoastr)
 
 # For tooltips
 library(shinyBS) 
-library(shinyhelper)
 library(tippy)
+library(shinyhelper)
+
 
 library(plotly)
 
@@ -113,11 +114,12 @@ fluidPage(
                                    tippy_this("group_differences_tooltip_icon", "<span style='font-size:14px; margin: 0px;'>Select two subgroups to perform a differential analysis. (A vs B) <span>", allowHTML = TRUE), 
                          ),
                          optionBox(id = "optionbox_options", title = "Analysis Options", collapsed = T,
-                                   multiChoicePicker("options_transformation", "Metric for Fold Changes:", c("Ratio of Spectral Counts", "Ratio of Percentages", "Odds Ratio"), selected = "Odds Ratio", isInline = "F", multiple = F, width = "auto", style = "margin-bottom:6px;", picker_inline = T, class_names = "abc", tooltip = "If ratio of spectral counts are selected, fold changes will be computed by dividing the spectral counts of case samples with the control samples. If percentages are selected, the spectral counts will first be transformed to percentages by dividing the counts in the oxidation data by the unmodified counts. If odds ratio is selected, the percentages are further transformed as odds and the fold changes correspond to the odds ratio. ", tooltip_width = "240px"),
+                                   multiChoicePicker("options_transformation", "Metric for Fold Changes:", c("Ratio of Spectral Counts", "Ratio of Percentages", "Odds Ratio"), selected = "Ratio of Percentages", isInline = "F", multiple = F, width = "auto", style = "margin-bottom:6px;", picker_inline = T, class_names = "abc", tooltip = "If ratio of spectral counts are selected, fold changes will be computed by dividing the spectral counts of case samples with the control samples. If percentages are selected, the spectral counts will first be transformed to percentages by dividing the counts in the oxidation data by the unmodified counts. If odds ratio is selected, the percentages are further transformed as odds and the fold changes correspond to the odds ratio. ", tooltip_width = "240px"),
+                                   multiChoicePicker("options_imputation", "Imputation of Zeroes:", c("Minimum across proteins", "Replace with 0.5", "Do not apply"), selected = "Minimum across proteins", isInline = "F", multiple = F, width = "auto", style = "margin-bottom:6px;", picker_inline = T, class_names = "abc", tooltip = "If minimum across proteins are selected, spectral counts equal to zero will be replaced with the minimum values across all proteins for the corresponding sample (optimistic estimate). If replace with 0.5 is selected, spectral counts equal to 0 will be replaced with 0.5 before the percentages and fold changes are computed (conservative estimate)", tooltip_width = "240px"),
                                    fancyCheckbox("options_var_across_samples", "Estimate variance across samples", default = T, tooltip = "If enabled, variance will be measured across the samples and t-test will be performed. Otherwise, variance will be measured across the proteins based on the fold changes and z-test will be performed. Recommended", tooltip_width = "270px"), 
                                    fancyCheckbox("options_moderated_ttest", "Apply moderated t-test", default = T, tooltip = "If enabled, a moderated t-test will be performed if applicable."), 
                                    asliderInput("options_minsamples", "Min. number of samples", 2, 5, 2, step = 1, tooltip = "Select minimum required number of samples to perform a t-test. Proteins with less number of quantifications will be filtered (only used if t-test is enabled)"),
-                                   multiChoicePicker("options_var_stabilization", "Variable Stabilization:", c("Centering", "Do not apply"), selected = "Centering", isInline = "F", multiple = F, width = "auto", style = "margin-bottom:6px;", picker_inline = T, class_names = "abc", tooltip = "If centering is selected, quantifications for all samples will be centered by substrating the mean across all proteins. "),
+                                   multiChoicePicker("options_var_stabilization", "Variable Stabilization:", c("Centering", "Do not apply"), selected = "Do not apply", isInline = "F", multiple = F, width = "auto", style = "margin-bottom:6px;", picker_inline = T, class_names = "abc", tooltip = "If centering is selected, quantifications for all samples will be centered by substrating the mean across all proteins. "),
                                    fancyCheckbox("options_center_foldchanges", "Center the fold changes", default = F, tooltip = "If enabled, log fold changes will be centered by substrating the mean across all proteins."), 
                          )
                )
@@ -144,7 +146,7 @@ fluidPage(
                                         tags$div(style = "min-height:450px;",
                                                  shinycssloaders::withSpinner(DT::dataTableOutput("protExpressionTable")),
                                         ),
-                                        # "Double click on a row to inspect it in detail.",
+                                        "Double click on a row to inspect it in detail.",
                                )
                       ),
                  )),

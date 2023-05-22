@@ -154,10 +154,13 @@ current_dataset_mapped <- reactive({
     ds$ST = ds$ST[valid_rows, ]
     row_indices = row_indices[valid_rows]
     
+    ds$Ts_raw = ds$Ts
+    ds$Ts2 = ds2$Ts[row_indices, indices]
     if(!identical(input$options_transformation, "Ratio of Spectral Counts")){
       ds$Ts = ds$Ts / ds2$Ts[row_indices, indices]
       ds$Ts[is.infinite(ds$Ts)] = NA
-      ds$Ts[ds$Ts <= 0] = NA
+      ds$Ts[ds$Ts < 0] = NA
+      # ds$Ts[ds$Ts <= 0] = NA
       ds$Ts[ds$Ts > 1] = NA
     }
     
