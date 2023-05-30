@@ -217,13 +217,15 @@ fluidPage(
                                                              )
                                                     )
                  )),
-                 tabPanel("Report Generator", tags$div(style = "padding:4px;", 
-                                                       generate_scenario_area(list(
+                 tabPanel("Report Generator", tags$div(id = "report_generator_div", style = "padding:4px;", 
+                                                       tags$span(id = "report_generator_options", generate_scenario_area(list(
                                                          multiChoicePicker("report_data_source", "Data Source:", c("Methionine Oxidation", "Enrichment"), isInline = "F", multiple = F, width = "auto", style = "display:flex;flex-direction: column; margin-bottom:6px;", picker_inline = F, class_names = "abc", tooltip = "Select the type of the analysis to be performed."),
                                                          uiOutput("report_group_options")
-                                                       ), nRow = 3), 
+                                                       ), nRow = 3)), 
+                                                       tags$span(id = "report_generator_buttons", 
                                                        actionButton('prepare_report', "Run"),
-                                                       shinyjs::disabled(downloadButton('test_report_generator', 'Report (Excel)')),
+                                                       shinyjs::disabled(downloadButton('test_report_generator', 'Report (Excel)'))
+                                                       ),
                  ))
                ),
                

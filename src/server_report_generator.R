@@ -163,6 +163,7 @@ foGetTableParameters <- function(analysis_level){
   out = list()
   out$to_numeric = c()
   out$absolute_sorting = TRUE
+  out$fitlastcolumn = FALSE
   switch(analysis_level, 
          "Phosphosites" = {
            out$sorted_cols = c("Protein", "ProteinName", "Position", "InRef", "isSignificant", "ZScore", "TStat", "Phos", "StdErr", "DF", "PValue", "FDR")
@@ -182,10 +183,11 @@ foGetTableParameters <- function(analysis_level){
            out$to_numeric = c("NumSubs", "ZScore", "Activity", "StdErr", "DF")
          }, 
          "Enrichment" = {
-           out$sorted_cols = c("ID", "Name", "Category", "HitRatio", "ObsRatio", "isSignificant", "ZScore", "LogRiskRatio", "ChiSqr", "PValue", "FDR")
+           out$sorted_cols = c("ID", "Name", "Category", "HitRatio", "ObsRatio", "isSignificant", "ZScore", "LogRiskRatio", "ChiSqr", "PValue", "FDR", "Hits", "AllTargets")
            out$title = paste0("Enrichment", " (", input$enrichment_datasource, ")")
            out$to_numeric = c("ZScore")
            out$absolute_sorting = FALSE
+           out$fitlastcolumn = TRUE
          }, 
          stop("Invalid data source for the report generator")
   )
@@ -263,7 +265,12 @@ foFormatSTtable <- function(wb, ST, group_name, analysis_level){
   wb = foExcelSignedFormatting(wb, ST, group_name, signedColumns, startRow = startRow)
   wb = foExcelInfoFormatting(wb, ST, group_name, infoColumns, startRow = startRow)
   wb = foExcelBinaryFormatting(wb, ST, group_name, binaryColumns, startRow = startRow)
-
+  if(tableparam$fitlastcolumn){
+    startCol = ncol(ST) + 1
+    message("fdsfd")
+    writeData(wb, group_name, rep(NA, nrow(ST)+1), startRow = startRow, startCol = startCol, keepNA = T, na.string = "")
+  }
+  
   return(wb)
 }
 

@@ -415,10 +415,81 @@ go_enrichment_table_processed <- reactive({
   return(foProcessEnrichmentTable(GT))
 })
 
+foPathwayTargetsTable <- function(ds, GT){
+  UniprotGene = ds$UniprotGene
+  Wuniprotgene2goterm = ds$Wuniprotgene2goterm[, GT$Index]
+  Wuniprotgene2goterm_significant = ds$Wuniprotgene2goterm_significant[, GT$Index]
+  
+  indices = which(Wuniprotgene2goterm, arr.ind = T)
+  i1 = indices[, 2]
+  i2 = indices[, 1]
+  
+  KS = data.frame(
+    ID = GT$ID[i1],
+    Name = GT$Name[i1],
+    Category = GT$Category[i1],
+    numProtein = GT$numProtein[i1],
+    numIdentified = GT$numIdentified[i1],
+    numSignificant = GT$numSignificant[i1],
+    LogRiskRatio = GT$LogRiskRatio[i1], 
+    EffectiveMag = GT$EffectiveMag[i1], 
+    ZScore = GT$ZScore[i1], 
+    FDR = GT$FDR[i1], 
+    isSignificant = GT$isSignificant[i1], 
+    TargetID = UniprotGene$ID[i2],
+    TargetProtein = UniprotGene$Gene[i2],
+    IsHit = UniprotGene$isSignificant[i2]
+  )
+  
+  return(KS)
+}
+
+foPrepareEnrichmentWithtargets <- function(KS, GT){
+  KSv = KS[KS$IsHit, ]
+  
+  concatenated <- aggregate(TargetProtein ~ ID, KSv, function(x) paste(x, collapse = "; "));
+  indices = match(concatenated$ID, GT$ID)
+  values = rep(NA, nrow(GT))
+  values[indices] = concatenated$TargetProtein[!is.na(indices)]
+  GT$Hits = values;
+  
+  concatenated <- aggregate(TargetProtein ~ ID, KS, function(x) paste(x, collapse = "; "));
+  indices = match(concatenated$ID, GT$ID)
+  values = rep(NA, nrow(GT))
+  values[indices] = concatenated$TargetProtein[!is.na(indices)]
+  GT$AllTargets = values;
+  
+  return(GT)
+}
+
+pathway_targets_table <- reactive({
+  req(go_enrichment_table())
+  req(go_enrichment_table_processed())
+  
+  ds <- go_enrichment_table()
+  GT <- go_enrichment_table_processed()
+  KS = foPathwayTargetsTable(ds, GT)
+  # GT = foPrepareEnrichmentWithtargets(KS, GT)
+  # browser()
+  
+  return (KS)
+})
+
+go_enrichment_table_processed_withtargets <- reactive({
+  req(pathway_targets_table())
+  KS = pathway_targets_table()
+  GT = go_enrichment_table_processed()
+  GT = foPrepareEnrichmentWithtargets(KS, GT)
+  return(GT)
+})
+
 foComputeEnrichmentTable <- function(ST){
   set = foEnrichmentBackgroundSet(ST)
   out = foPrepareEnrichmentTable(set)
-  return(foProcessEnrichmentTable(out$GO))
+  GT = foProcessEnrichmentTable(out$GO)
+  KS = foPathwayTargetsTable(out, GT)
+  GT = foPrepareEnrichmentWithtargets(KS, GT)
+  return(GT)
 }
 
 
