@@ -1,5 +1,5 @@
 # MetO-Xplorer
-MetO-Xplorer is a web tool designed for exploratory data analysis of methionine sulfoxide (MetO) data, enabling you to uncover the regulatory potential of this reversible post-translational modification. With MetO-Xplorer, you can easily analyze and interpret MetO data to gain insights into protein function and cellular processes.
+MetOXplorer is a web tool designed for exploratory data analysis of methionine sulfoxide (MetO) data, enabling you to uncover the regulatory potential of this reversible post-translational modification. With MetO-Xplorer, you can easily analyze and interpret MetO data to gain insights into protein function and cellular processes.
 
 With MetO-Xplorer, you can:
 * Identify significant changes in methionine oxidation with ease,
