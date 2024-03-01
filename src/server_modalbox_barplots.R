@@ -7,7 +7,9 @@ modal_protexpression_samplewise_barplot <- reactive({
   req(processed_expression_data_bysample_unfiltered())
   ds <- processed_expression_data_bysample_unfiltered()
   
-  ds$ST$Identifier = ds$ST$ProteinName
+  nameX = ds$ST$ProteinName
+  nameX[is.na(nameX)] = ds$ST$Protein[is.na(nameX)]
+  ds$ST$Identifier = nameX
   
   groupings = input$mbox_site_plot_select_group
   # case_control_option = input$mbox_site_plot_samples_case_control

@@ -25,7 +25,7 @@ library(plotly)
 library(cicerone)
 library(hrbrthemes)
 library(viridis)
-library("ggthemes")
+library(ggthemes)
 
 options(shiny.sanitize.errors = FALSE)
 
@@ -88,7 +88,9 @@ function(input, output, session) {
     switch(input$refproteome, 
            "Uniprot Human" = "uniprot.human",
            "Uniprot Mouse" = "uniprot.mouse",
-           "Uniprot Rat" = "uniprot.rat")
+           "Uniprot Rat" = "uniprot.rat", 
+           "Other" = "uniprot.rat"
+           )
   })
   
   # Comment the following to change mapping beyond data upload

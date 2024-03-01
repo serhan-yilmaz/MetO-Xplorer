@@ -305,6 +305,9 @@ foProcessEnrichmentTable <- function(GT){
       nterm = ncol(A)
       nprot = nrow(A)
       C = t(A) %*% A; ## Overlaps
+      validate(
+        need(nrow(A)>0, "No enrichment terms available!")
+      )
       U = sparseDiag(colSums(A)) %*% (C > 0) + 
         (C > 0) %*% sparseDiag(colSums(A)) - C
       qi = which(C>0)

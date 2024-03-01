@@ -135,6 +135,9 @@ output$sitelevel_volcano <- renderPlotly({
 output$protexpression_volcano <- renderPlotly({
   req(protexpression_table_processed())
   ST <- protexpression_table_processed()
+  nameX = ST$ProteinName
+  nameX[is.na(nameX)] = ST$Protein[is.na(nameX)]
+  ST$Identifier = nameX
   
   identifier = "protexpression_volcano_"
   minlogfc = input[[paste0(identifier, "minlogfc")]]

@@ -124,7 +124,7 @@ dataInputDiv <- tags$div(
                      )),
                      tippy_this("upload_metadata_tooltip_icon", "<span style='font-size:14px; margin: 0px;'>Metadata on samples. Click to learn the format.<span>", allowHTML = TRUE), 
                      tags$div(style = "margin-top: 0px;",
-                        multiChoicePicker("refproteome", "Reference Proteome:", c("Uniprot Human", "Uniprot Mouse", "Uniprot Rat"), selected = "Uniprot Mouse"),
+                        multiChoicePicker("refproteome", "Reference Proteome:", c("Uniprot Human", "Uniprot Mouse", "Uniprot Rat", "Other"), selected = "Uniprot Mouse"),
                      )
                      ))
            )

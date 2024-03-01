@@ -267,7 +267,6 @@ foFormatSTtable <- function(wb, ST, group_name, analysis_level){
   wb = foExcelBinaryFormatting(wb, ST, group_name, binaryColumns, startRow = startRow)
   if(tableparam$fitlastcolumn){
     startCol = ncol(ST) + 1
-    message("fdsfd")
     writeData(wb, group_name, rep(NA, nrow(ST)+1), startRow = startRow, startCol = startCol, keepNA = T, na.string = "")
   }
   

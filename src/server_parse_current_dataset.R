@@ -189,9 +189,11 @@ current_dataset_mapped <- reactive({
   ds$ST$ID = ds$ST$Protein
   
   ### TODO: Change the error check/mapping style from sites to proteins
-  validate(
-    need(nnzero(!is.na(indices))>0, "Input mapping failed. Please check if the correct reference proteome is selected.")
-  )
+  if(input$refproteome != "Other"){
+    validate(
+      need(nnzero(!is.na(indices))>0, "Input mapping failed. Please check if the correct reference proteome is selected.")
+    )
+  }
   
   if(identical(myvalue(), "upload")){
     main_logging("Uploaded dataset successfully parsed")
