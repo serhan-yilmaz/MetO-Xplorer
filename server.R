@@ -89,7 +89,7 @@ function(input, output, session) {
            "Uniprot Human" = "uniprot.human",
            "Uniprot Mouse" = "uniprot.mouse",
            "Uniprot Rat" = "uniprot.rat", 
-           "Other" = "uniprot.rat"
+           "Other" = "uniprot.mouse"
            )
   })
   
