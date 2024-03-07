@@ -21,4 +21,4 @@ if(!require("devtools"))
 devtools::source_url("https://github.com/serhan-yilmaz/RokaiXplorer/blob/main/src/deploy_from_github.R?raw=TRUE")
 installDependencies()
 ```
-For more details on installing the dependencies and troubleshooting, check out the steps #1 and #4 in [a related tutorial](https://github.com/serhan-yilmaz/RokaiXplorer/tree/main/deploy). 
+For more details on installation and dependencies, check out the steps #1 and #4 in [a related tutorial](https://github.com/serhan-yilmaz/RokaiXplorer/tree/main/deploy). 
