@@ -14,11 +14,11 @@ library(shiny)
 runGitHub("meto-xplorer", "serhan-yilmaz")
 ```
 
-Note that, this will require the relevant R packages. 
+Note that, this will require the relevant R packages. To install them, consider running the following in your R installation: 
 ```
 if(!require("devtools"))
   install.packages("devtools")
 devtools::source_url("https://github.com/serhan-yilmaz/RokaiXplorer/blob/main/src/deploy_from_github.R?raw=TRUE")
 installDependencies()
 ```
-For more details, check out the steps #1 and #4 in [a related tutorial](https://github.com/serhan-yilmaz/RokaiXplorer/tree/main/deploy). 
+For more details on installation of R packages and dependencies, check out the steps #1 and #4 in [a related tutorial](https://github.com/serhan-yilmaz/RokaiXplorer/tree/main/deploy). 
