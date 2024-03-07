@@ -14,7 +14,7 @@ library(shiny)
 runGitHub("meto-xplorer", "serhan-yilmaz")
 ```
 
-Note that, this will require the relevant R packages. To install them, consider running the following in your R installation: 
+Note that, this will require the relevant R packages to be installed on your system. For this purpose, run the following script in your R installation: 
 ```
 if(!require("devtools"))
   install.packages("devtools")
