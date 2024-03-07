@@ -7,3 +7,8 @@ With MetO-Xplorer, you can:
 * Explore the role of methionine oxidation in cellular regulation and redox signaling
 
 Visit the web application at: https://yilmazs.shinyapps.io/MetO-Xplorer/
+## Running Locally
+To run MetO-Xplorer locally on your R installation, simply run:
+```
+library(shiny)
+runGitHub("meto-xplorer", "serhan-yilmaz")
